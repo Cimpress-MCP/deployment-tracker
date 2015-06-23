@@ -1,6 +1,4 @@
 # Deployment Tracker
-![trumpet](http://realbraveaudio.com/wp-content/uploads/2013/03/trumpet-lessons.jpg)
-
 Deployment Tracker is a REST micro service that collects deployment metadata from various
 deployment engines and forwards them along to various application endpoints for later analysis.
 
