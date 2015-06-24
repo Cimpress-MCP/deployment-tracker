@@ -1,5 +1,3 @@
-console.log("Deployment Tracker starting");
-
 var SwaggerExpress = require('swagger-express-mw');
 app = require('express')();
 module.exports = app;  // for testing
@@ -11,13 +9,13 @@ var swaggerConfig = {
 var config = require("./config.js");
 
 var logger = require('./lib/logger.js').getLogger({'module': __filename});
-logger.info('Trumpet starting up.');
+logger.info('Deployment Tracker starting up.');
 
 var statsd_client = require('./lib/statsd.js').init(config);
 var redis_client = require('./lib/redis.js').init(config);
 redis_client.on('error', function (err) {
   logger.error(err, "Error in redis_client");
-  statsd_client.increment('trumpet.redis.error');
+  statsd_client.increment('deployment-tracker.redis.error');
 });
 
 var db = require("./data/models/index.js");
