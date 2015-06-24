@@ -15,7 +15,9 @@ module.exports = {
 };
 
 function getDeployments(req, res) {
-  db.Deployment.findAll().then(function(deployments) {
+  db.Deployment.findAll({
+    include: [{ model: db.Server, as: 'servers' }]
+  }).then(function(deployments) {
     for(var i = 0; i < deployments.length; i++) {
       var deployment = deployments[i];
       deleteNullValues(deployment.dataValues);
@@ -40,7 +42,12 @@ function postDeployment(req, res) {
 }
 
 function getDeployment(req, res) {
-  db.Deployment.findOne({ where: { deployment_id: req.swagger.params.id.value } }).then(function(deployment) {
+  db.Deployment.findOne({
+    where: { deployment_id: req.swagger.params.id.value },
+    include: [
+      { model: db.Server, as: 'servers' }
+    ]
+  }).then(function(deployment) {
     if (deployment === null) {
       throw swagger.errors.notFound('id');
     } else {

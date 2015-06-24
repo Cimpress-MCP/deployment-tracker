@@ -13,15 +13,26 @@ module.exports = {
 };
 
 function postServer(req, res) {
-  var server = req.swagger.params.body.value;
-  statsd_client.increment(server.hostname + ".started");
-  res.location('/deployments/' + server.deployment_id + '/servers/' + server.hostname);
-  res.status(201).end();
+    var server = req.swagger.params.body.value;
+    db.Server.build(server).save().then(function(server) {
+      statsd_client.increment(server.hostname + ".started");
+      res.location('/deployments/' + server.deployment_id + '/servers/' + server.hostname);
+      res.status(201).end();
+    })
+
 }
 
 function putServer(req, res) {
-  var server = req.body;
-  statsd_client.increment(server.hostname + "." + server.result);
-  statsd_client.timing(server.hostname + ".elapsed", server.elapsed_seconds);
-  res.status(204).end();
+  var server = req.swagger.params.body.value;
+
+  db.Server.update(server, {
+    where: {
+      hostname: server.hostname,
+      deployment_id: server.deployment_id
+    }
+  }).then(function(server) {
+    statsd_client.increment(server.hostname + "." + server.result);
+    statsd_client.timing(server.hostname + ".elapsed", server.elapsed_seconds);
+    res.status(204).end();
+  });
 }

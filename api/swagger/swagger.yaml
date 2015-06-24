@@ -247,6 +247,11 @@ definitions:
       elapsed_seconds:
         type: integer
         description: The elapsed time of the deployment, in seconds
+      servers:
+        type: array
+        description: The servers that participated in the deployment
+        items:
+          $ref: "#/definitions/Server"
   Server:
     required:
       - deployment_id
