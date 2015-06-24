@@ -16,6 +16,10 @@ module.exports = {
 
 function getDeployments(req, res) {
   db.Deployment.findAll().then(function(deployments) {
+    for(var i = 0; i < deployments.length; i++) {
+      var deployment = deployments[i];
+      deleteNullValues(deployment.dataValues);
+    }
     res.json(deployments);
   });
 }
@@ -40,13 +44,7 @@ function getDeployment(req, res) {
     if (deployment === null) {
       throw swagger.errors.notFound('id');
     } else {
-      if (deployment.dataValues.result == null) {
-        delete deployment.dataValues.result;
-      }
-      if (deployment.dataValues.elapsed_seconds == null) {
-        delete deployment.dataValues.elapsed_seconds;
-      }
-      res.json(deployment.dataValues);
+      res.json(deleteNullValues(deployment.dataValues));
     }
   }).catch(function(err) {
     res.status(500).json(err);
@@ -68,4 +66,15 @@ function putDeployment(req, res) {
   }).catch(function(err) {
     res.status(500).json(err);
   });
+}
+
+// This is gross. Fire me.
+function deleteNullValues(deployment) {
+  if (deployment.result == null) {
+    delete deployment.result;
+  }
+  if (deployment.elapsed_seconds == null) {
+    delete deployment.elapsed_seconds;
+  }
+  return deployment;
 }
