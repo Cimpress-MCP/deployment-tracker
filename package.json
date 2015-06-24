@@ -2,10 +2,10 @@
   "name": "deployment-tracker",
   "version": "0.0.1",
   "private": true,
-  "description": "New Swagger API Project",
+  "description": "Collect deployment metadata and store it in purpose-driven data stores",
   "keywords": [],
   "author": "",
-  "license": "",
+  "license": "Apache 2",
   "main": "app.js",
   "dependencies": {
     "bunyan": "^1.4.0",
