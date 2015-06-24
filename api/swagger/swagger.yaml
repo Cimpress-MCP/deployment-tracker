@@ -1,43 +1,16 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: Hello World App
-# during dev, should point to your local machine
-host: localhost:10010
-# basePath prefixes all resource paths
+  title: Deployment Tracker
+host: localhost:8080
 basePath: /
-#
 schemes:
-  # tip: remove http to make production-grade
   - http
-  - https
-# format of bodies a client can send (Content-Type)
 consumes:
   - application/json
-# format of the responses to the client (Accepts)
 produces:
   - application/json
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
-    get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
-      parameters:
-        - {name: name, in: query, description: The name of the person to whom to say hello, required: false, type: string}
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /v1/deployments:
     x-swagger-router-controller: deployments
     get:
@@ -47,7 +20,9 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/DeploymentArray"
+            type: array
+            items:
+              $ref: "#/definitions/Deployment"
         default:
           description: Error
           schema:
@@ -228,27 +203,14 @@ definitions:
     properties:
       message:
         type: object
-  HelloWorldResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
   ErrorResponse:
     required:
       - message
     properties:
       message:
         type: string
-  DeploymentArray:
-    required:
-      - deployments
-    properties:
-      deployments:
-        type: array
-        items:
-          $ref: "#/definitions/Deployment"
   Deployment:
+    type: object
     required:
       - deployment_id
     properties:
