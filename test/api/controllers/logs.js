@@ -11,11 +11,8 @@ describe('controllers', function() {
       it('Should be able to post a log message for a deployment', function(done) {
         var log_message = {
           message: "I am a message",
-          organization: "MCP",
-          team: "ICE",
-          application: "vagrant-orchestrate",
+          application: "deployment-tracker-tests",
           host: "localhost",
-          log_owner: "ice_deliverability@cimpress.com",
           guest: "a.server"
         };
         request(server)

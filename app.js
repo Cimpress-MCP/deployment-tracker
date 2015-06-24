@@ -11,8 +11,8 @@ var config = require("./config.js");
 var logger = require('./lib/logger.js').getLogger({'module': __filename});
 logger.info('Deployment Tracker starting up.');
 
-var statsd_client = require('./lib/statsd.js').init(config);
-var redis_client = require('./lib/redis.js').init(config);
+var statsd_client = require('./lib/statsd.js').init(config.statsd || {});
+var redis_client = require('./lib/redis.js').init(config.redis || {});
 redis_client.on('error', function (err) {
   logger.error(err, "Error in redis_client");
   statsd_client.increment('deployment-tracker.redis.error');

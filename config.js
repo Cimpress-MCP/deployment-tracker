@@ -1,9 +1,9 @@
 module.exports = {
   redis: {
-    host: 'devredis.mcpelk.service.qas.consul'
+    host: '127.0.0.1'
   },
   statsd: {
-    host: 'dev.mcpmetrics.cimpress.net',
-    prefix: 'ICE.deployment.'
+    host: '127.0.0.1',
+    prefix: 'deployment-tracker.'
   }
 };

@@ -26,27 +26,14 @@ end script
 EOF
 sudo service deployment-tracker start
 
+# Redis
+apt-get install -y redis-server
+sed -i '/bind 127.0.0.1/c\\#bind 127.0.0.1' /etc/redis/redis.conf
+service redis-server restart
 SCRIPT
 
-required_plugins = %w( vagrant-hostmanager )
-required_plugins.each do |plugin|
-  system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
-end
-
 Vagrant.configure(2) do |config|
-  config.hostmanager.enabled = true
-  config.hostmanager.manage_host = true
-
-  config.vm.define "app" do |appconfig|
-    appconfig.vm.box = "ubuntu/trusty64"
-    appconfig.vm.network "private_network", ip: "192.168.10.118"
-    appconfig.vm.hostname = "loclocicedtr001"
-    appconfig.vm.provision :shell, inline: @script
-  end
-
-#  config.vm.define "database" do |dbconfig|
-#    dbconfig.vm.box = "nickcharlton/postgres"
-#    dbconfig.vm.network "private_network", ip: "192.168.10.120"
-#    dbconfig.vm.hostname = "loclocdbatrd001"
-#  end
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.provision :shell, inline: @script
+  config.vm.network "forwarded_port", guest: 6379, host: 6379
 end
