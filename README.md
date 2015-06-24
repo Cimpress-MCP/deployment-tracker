@@ -1,6 +1,5 @@
 # Deployment Tracker
-Deployment Tracker is a REST micro service that collects deployment metadata from various
-deployment engines and forwards them along to various application endpoints for later analysis.
+Collect deployment metadata from various deployment engines and forwards them along to purpose-driven application endpoints for analysis later.
 
 Outputs include:
 1. Logstash (ELK stack) for log messages
