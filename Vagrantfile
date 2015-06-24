@@ -8,7 +8,7 @@ ln -sf /usr/bin/nodejs /usr/bin/node
 mkdir -p /usr/local/lib/node_modules
 ln -sf /vagrant /usr/local/lib/node_modules/deployment-tracker
 
-# Create init script for trumpet
+# Create init script for deployment-tracker
 cat <<EOF >/etc/init/deployment-tracker.conf
 # deployment-tracker Agent (Upstart unit)
 description "deployment-tracker service"
