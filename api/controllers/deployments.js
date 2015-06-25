@@ -14,14 +14,19 @@ module.exports = {
   putDeployment: putDeployment
 };
 
-function getDeployments(req, res) {
+function getDeployments(req, res, next) {
   db.Deployment.findAll({
-    include: [{ model: db.Server, as: "servers" }]
+    include: [{ model: db.Server, as: "servers" }],
+    limit: req.swagger.params.limit.value,
+    offset: req.swagger.params.offset.value,
+    order: [ ["createdAt", "DESC"] ]
   }).then(function(deployments) {
     for(var i = 0; i < deployments.length; i++) {
       var deployment = deployments[i];
       deleteNullValues(deployment.dataValues);
     }
+
+    next();
     res.json(deployments);
   });
 }

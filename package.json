@@ -29,6 +29,7 @@
     "grunt-mocha-test": "^0.12.7",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
+    "node-mocks-http": "^1.4.3",
     "node-uuid": "^1.4.3",
     "should": "^5.2.0",
     "supertest": "^0.15.0"

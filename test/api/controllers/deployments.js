@@ -77,14 +77,31 @@ describe("controllers", function() {
     describe("GET /v1/deployments", function() {
       it("Should be able to retrieve a list of deployments", function(done) {
         request(server)
-          .get("/v1/deployments/")
+          .get("/v1/deployments")
           .end(function(err, res) {
             if (err) {
               throw err;
             }
             var body = res.body;
-            // These are ordered, so the last one should be the one we just created.
-            body[body.length - 1].should.have.property("deployment_id", deployment_id);
+
+            // These are reverse-ordered, so the first one should be the one we just created.
+            body[0].should.have.property("deployment_id", deployment_id);
+            done();
+        });
+      });
+
+      it("Should support pagination", function(done) {
+        request(server)
+          .get("/v1/deployments")
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+
+            res.headers.link.should.containEql("/v1/deployments?offset=25&limit=25");
+
+            // This is page zero and should not return a previous page
+            res.headers.link.should.not.containEql("rel=\"prev\"");
             done();
         });
       });

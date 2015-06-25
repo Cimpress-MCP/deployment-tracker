@@ -4,6 +4,24 @@ info:
   title: Deployment Tracker
 host: localhost:8080
 basePath: /
+parameters:
+  limit:
+    name: limit
+    in: query
+    description: Number of results to return
+    required: true
+    type: integer
+    default: 25
+    minimum: 1
+    maximum: 1000
+  offset:
+    name: offset
+    in: query
+    description: Which result to start with
+    required: true
+    type: integer
+    default: 0
+    minimum: 0
 schemes:
   - http
 consumes:
@@ -16,6 +34,9 @@ paths:
     get:
       description: Get the list of most recently completed deployments
       operationId: getDeployments
+      parameters:
+        - $ref: "#/parameters/offset"
+        - $ref: "#/parameters/limit"
       responses:
         "200":
           description: Success
@@ -176,6 +197,9 @@ paths:
     get:
       description: Return a list of all servers that have been deployed to
       operationId: getAllServers
+      parameters:
+        - $ref: "#/parameters/offset"
+        - $ref: "#/parameters/limit"
       responses:
         "200":
           description: Success
@@ -198,6 +222,8 @@ paths:
           description: The hostname for the server
           required: true
           type: string
+        - $ref: "#/parameters/offset"
+        - $ref: "#/parameters/limit"
       responses:
         "200":
           description: Success
