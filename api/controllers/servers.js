@@ -51,8 +51,6 @@ function putServer(req, res) {
 }
 
 function getAllServers (req, res, next) {
-  //res.links(req.getPageLinks(req.swagger.params.offset.value, req.swagger.params.limit.value));
-
   // Sequelize #findAll has no way to SELECT Distinct (without also counting or
   // aggregating in some other way). https://github.com/sequelize/sequelize/issues/2996
   /* jshint multistr: true */
