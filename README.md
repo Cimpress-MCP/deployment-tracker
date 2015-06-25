@@ -2,6 +2,7 @@
 Collect deployment metadata from various deployment engines and forwards them along to purpose-driven application endpoints for analysis later.
 
 Outputs include:
+
 1. Logstash (ELK stack) for log messages
 2. Statsd for metrics aggregation
 3. SQL database table for long-lived deployment summary information
