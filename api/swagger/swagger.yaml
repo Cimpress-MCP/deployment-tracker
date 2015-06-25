@@ -161,8 +161,6 @@ paths:
           required: true
           schema:
             $ref: "#/definitions/Server"
-        - $ref: "#/parameters/offset"
-        - $ref: "#/parameters/limit"
       responses:
         "201":
           description: Success
