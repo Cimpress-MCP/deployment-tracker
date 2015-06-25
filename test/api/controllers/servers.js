@@ -5,7 +5,8 @@ var server = require('../../../app');
 
 process.env.A127_ENV = 'test';
 
-var deployment_id = uuid.v4();
+var deployment_id = uuid.v4(),
+    hostname = "localhostzzz";
 
 describe('controllers', function() {
   describe('servers', function() {
@@ -36,7 +37,7 @@ describe('controllers', function() {
     describe('POST /v1/deployments/{id}/servers', function () {
       var testServer = {
         deployment_id: deployment_id,
-        hostname: 'localhostzzz',
+        hostname: hostname,
         ip_address: '127.0.0.1',
         result: "success",
         elapsed_seconds: 123
@@ -60,7 +61,7 @@ describe('controllers', function() {
     describe('PUT /v1/deployments/{id}/servers', function () {
       var status = {
         deployment_id: deployment_id,
-        hostname: "localhostzzz",
+        hostname: hostname,
         result: "success",
         elapsed_seconds: 234
       };
@@ -73,6 +74,47 @@ describe('controllers', function() {
               throw err;
             }
             res.should.have.property('status', 204);
+            done();
+          });
+      });
+    });
+
+    describe('GET /v1/servers', function () {
+      it('Should be able to query the database for servers that have been deployed to', function(done) {
+        request(server)
+          .get('/v1/servers')
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+
+            var body = res.body;
+            var contains = false;
+
+            // I couldn't find the proper `should` incantation
+            // to locate a partial object inside of an array
+            body.forEach(function(server){
+              if (server.hostname === hostname){
+                contains = true;
+              }
+            });
+            contains.should.eql(true);
+            done();
+          });
+      });
+    });
+
+    describe('GET /v1/servers/{hostname}', function () {
+      it('Should find deployments of which a server was a part', function(done) {
+        request(server)
+          .get('/v1/servers/' + hostname)
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+
+            var body = res.body;
+            body[0].should.have.property('deployment_id', deployment_id);
             done();
           });
       });

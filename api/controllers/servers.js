@@ -9,7 +9,9 @@ var db = app.get('db');
 
 module.exports = {
   postServer: postServer,
-  putServer: putServer
+  putServer: putServer,
+  getAllServers: getAllServers,
+  getServerByHostname: getServerByHostname
 };
 
 function postServer(req, res) {
@@ -35,4 +37,37 @@ function putServer(req, res) {
     statsd_client.timing(server.hostname + ".elapsed", server.elapsed_seconds);
     res.status(204).end();
   });
+}
+
+function getAllServers (req, res) {
+  // Sequelize #findAll has no way to SELECT Distinct (without also counting or
+  // aggregating in some other way). https://github.com/sequelize/sequelize/issues/2996
+  db.sequelize.query('SELECT DISTINCT(`hostname`) FROM Servers', {})
+    .then(function (servers) {
+        servers = servers[0].map(function (e) {
+          return {
+            hostname: e.hostname,
+            links: [
+              { serverInfo: "/v1/servers/" + e.hostname }
+            ]
+          };
+        })
+        res.json(servers);
+    })
+    .catch(function(err){
+      res.json({"Status": "error", "Error": err});
+    });
+}
+
+function getServerByHostname (req, res) {
+  db.Server.findAll({
+    where: { hostname: req.swagger.params.hostname.value },
+    order: "`createdAt` DESC"
+  })
+    .then(function (servers) {
+        res.json(servers);
+    })
+    .catch(function(err){
+      res.json({"Status": "error", "Error": err});
+    });
 }

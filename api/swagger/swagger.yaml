@@ -171,6 +171,45 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /v1/servers:
+    x-swagger-router-controller: servers
+    get:
+      description: Return a list of all servers that have been deployed to
+      operationId: getAllServers
+      produces:
+        - application/json
+        - text/html
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ObjectResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ObjectResponse"
+  /v1/servers/{hostname}:
+    x-swagger-router-controller: servers
+    get:
+      description: Return a list of all servers that have been deployed to
+      operationId: getServerByHostname
+      produces:
+        - application/json
+      parameters:
+        - name: hostname
+          in: path
+          description: The hostname for the server
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ObjectResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ObjectResponse"
 
   /config:
     x-swagger-router-controller: admin
@@ -282,3 +321,4 @@ definitions:
       message:
         type: string
         description: The message to log
+  
