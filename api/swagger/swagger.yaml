@@ -184,7 +184,7 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ObjectResponse"
+            $ref: "#/definitions/ErrorResponse"
   /v1/servers/{hostname}:
     x-swagger-router-controller: servers
     get:
@@ -200,11 +200,13 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/ObjectResponse"
+            type: array
+            items:
+              $ref: "#/definitions/Server"
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ObjectResponse"
+            $ref: "#/definitions/ErrorResponse"
 
   /config:
     x-swagger-router-controller: admin
@@ -239,9 +241,9 @@ definitions:
         type: object
   ErrorResponse:
     required:
-      - message
+      - Error
     properties:
-      message:
+      Error:
         type: string
   Deployment:
     type: object
