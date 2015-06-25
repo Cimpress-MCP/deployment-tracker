@@ -180,7 +180,9 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/ObjectResponse"
+            type: array
+            items:
+              type: string
         default:
           description: Error
           schema:

@@ -88,17 +88,10 @@ describe('controllers', function() {
               throw err;
             }
 
-            var body = res.body;
-            var contains = false;
+            console.dir(res.body);
 
-            // I couldn't find the proper `should` incantation
-            // to locate a partial object inside of an array
-            body.forEach(function(server){
-              if (server.hostname === hostname){
-                contains = true;
-              }
-            });
-            contains.should.eql(true);
+            res.body.should.containEql(hostname);
+
             done();
           });
       });

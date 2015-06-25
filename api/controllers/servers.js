@@ -56,12 +56,7 @@ function getAllServers (req, res) {
 
       if (servers !== null) {
         servers = servers[0].map(function (e) {
-          return {
-            hostname: e.hostname,
-            links: [
-              { serverInfo: "/v1/servers/" + e.hostname }
-            ]
-          };
+          return e.hostname;
         });
       }
 
