@@ -30,7 +30,7 @@ function postDeployment(req, res) {
   var deployment = req.swagger.params.body.value;
   statsdClient.increment(deployment.environment + "." + deployment.package + ".started");
   deployment.message = "Deployment Tracker recording deployment start for deployment " + deployment.deployment_id;
-  redisClient.rpush("logstash", JSON.stringify(deployment));
+  redisClient.rpush("deployment-tracker", JSON.stringify(deployment));
   db.Deployment.build(deployment).save().then(function(deployment) {
     logger.debug("Successfully created deployment" + deployment.id);
     logger.trace(deployment);
@@ -69,7 +69,7 @@ function putDeployment(req, res) {
       _.assign(deployment, req.body);
       deployment.save();
       deployment.message = "Deployment Tracker recording deployment end for deployment " + deployment.deployment_id;
-      redisClient.rpush("logstash", JSON.stringify(deployment));
+      redisClient.rpush("deployment-tracker", JSON.stringify(deployment));
       statsdClient.increment(deployment.environment + "." + deployment.package + "." + deployment.result);
       statsdClient.timing(deployment.environment + "." + deployment.package + ".elapsed", deployment.elapsed_seconds);
       res.status(204).end();

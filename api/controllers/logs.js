@@ -14,7 +14,7 @@ module.exports = {
 function postLogs(req, res) {
   var message = req.swagger.params.body.value;
   message.deployment_id = req.swagger.params.id.value;
-  redisClient.rpush("logstash", JSON.stringify(message));
+  redisClient.rpush("deployment-tracker", JSON.stringify(message));
   statsdClient.increment("log_message");
   res.status(201).end();
 }
