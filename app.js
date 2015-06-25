@@ -41,7 +41,7 @@ app.set("db", db);
     if (err) { throw err; }
 
     swaggerExpress.register(app);
-    app.use(require('./api/middleware/pageLinks.js'));
+    app.use(require("./api/middleware/pageLinks.js"));
 
     var port = config.port || 8080;
     var host = config.host || "::";

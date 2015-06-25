@@ -42,7 +42,4 @@ TODO: come up with a clean mechanism for controlling metadata
 5. File a pull request
 
 ## TODO:
-* Paging for /v1/deployments
-* Add servers SQL data store
-* Expose /servers/ & /servers/{hostname} endpoints
 * Proper Exception Handling / logging

@@ -95,16 +95,16 @@ describe("controllers", function() {
           });
       });
 
-      it('Should support pagination', function(done) {
+      it("Should support pagination", function(done) {
         request(server)
-          .get('/v1/servers')
+          .get("/v1/servers")
           .end(function(err, res) {
             if (err) {
               throw err;
             }
 
-            res.headers.link.should.containEql('/v1/servers?offset=25&limit=25');
-            res.headers.link.should.not.containEql('rel="prev"');
+            res.headers.link.should.containEql("/v1/servers?offset=25&limit=25");
+            res.headers.link.should.not.containEql("rel=\"prev\"");
             done();
           });
       });
@@ -125,16 +125,16 @@ describe("controllers", function() {
           });
       });
 
-      it('Should support pagination', function(done) {
+      it("Should support pagination", function(done) {
         request(server)
-          .get('/v1/servers/' + hostname)
+          .get("/v1/servers/" + hostname)
           .end(function(err, res) {
             if (err) {
               throw err;
             }
 
-            res.headers.link.should.containEql('/v1/servers/' + hostname + '?offset=25&limit=25');
-            res.headers.link.should.not.containEql('rel="prev"');
+            res.headers.link.should.containEql("/v1/servers/" + hostname + "?offset=25&limit=25");
+            res.headers.link.should.not.containEql("rel=\"prev\"");
             done();
           });
       });
