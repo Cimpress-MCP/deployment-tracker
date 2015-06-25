@@ -176,9 +176,6 @@ paths:
     get:
       description: Return a list of all servers that have been deployed to
       operationId: getAllServers
-      produces:
-        - application/json
-        - text/html
       responses:
         "200":
           description: Success
@@ -193,8 +190,6 @@ paths:
     get:
       description: Return a list of all servers that have been deployed to
       operationId: getServerByHostname
-      produces:
-        - application/json
       parameters:
         - name: hostname
           in: path
@@ -321,4 +316,3 @@ definitions:
       message:
         type: string
         description: The message to log
-  

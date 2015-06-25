@@ -6,9 +6,13 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     jshint: {
-      all: ['*.js', 'lib/**/*.js'],
+      all: ['*.js', '+(lib|api|data|test)/**/*.js'],
       options: {
-        node: true
+        node: true,
+        eqeqeq: true,
+        globals: {
+          "app": true
+        }
       }
     },
     mochaTest: {
@@ -36,11 +40,17 @@ module.exports = function (grunt) {
           port: 8080
         }
       }
+    },
+    env: {
+      dev: {
+        DEPLOYMENT_TRACKER_LOG_LEVEL: "info"
+      }
     }
   });
 
   grunt.registerTask('default', ['jshint', 'mochaTest']);
-  grunt.registerTask('server', ['express:dev', 'watch']);
+  grunt.registerTask('server', ['env:dev', 'express:dev', 'watch']);
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-express-server');
+  grunt.loadNpmTasks('grunt-env');
 };

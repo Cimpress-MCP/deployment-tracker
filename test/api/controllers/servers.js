@@ -32,7 +32,7 @@ describe('controllers', function() {
           }
           done();
         });
-    })
+    });
 
     describe('POST /v1/deployments/{id}/servers', function () {
       var testServer = {

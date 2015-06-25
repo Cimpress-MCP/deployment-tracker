@@ -49,19 +49,19 @@ function getDeployment(req, res) {
     ]
   }).then(function(deployment) {
     if (deployment === null) {
-      throw swagger.errors.notFound('id');
+      throw new ReferenceError("Deployment Id " + req.swagger.params.id.value + " not found!");
     } else {
       res.json(deleteNullValues(deployment.dataValues));
     }
   }).catch(function(err) {
-    res.status(500).json(err);
+    res.status(500).json({ "Error": err.message });
   });
 }
 
 function putDeployment(req, res) {
   db.Deployment.findOne({ where: { deployment_id: req.swagger.params.id.value } }).then(function(deployment) {
     if (deployment === null) {
-      throw swagger.errors.notFound('id');
+      throw new ReferenceError("Deployment Id " + req.swagger.params.id.value + " not found!");
     } else {
       var _ = require("lodash");
       _.assign(deployment, req.body);
@@ -71,16 +71,16 @@ function putDeployment(req, res) {
       res.status(204).end();
     }
   }).catch(function(err) {
-    res.status(500).json(err);
+    res.status(500).json({ "Error": err.message });
   });
 }
 
 // This is gross. Fire me.
 function deleteNullValues(deployment) {
-  if (deployment.result == null) {
+  if (deployment.result === null) {
     delete deployment.result;
   }
-  if (deployment.elapsed_seconds == null) {
+  if (deployment.elapsed_seconds === null) {
     delete deployment.elapsed_seconds;
   }
   return deployment;
