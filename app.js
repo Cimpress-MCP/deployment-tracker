@@ -1,5 +1,10 @@
-var SwaggerExpress = require('swagger-express-mw');
-app = require('express')();
+// Disable "use strict" so we can set to global app.
+// This is a bad habit to get into - controllers can
+// get this from the request, anyway, with `req.app`.
+/* jshint strict: false */
+
+var SwaggerExpress = require("swagger-express-mw");
+app = require("express")();
 module.exports = app;  // for testing
 
 var swaggerConfig = {
@@ -8,14 +13,14 @@ var swaggerConfig = {
 
 var config = require("./config.js");
 
-var logger = require('./lib/logger.js').getLogger({'module': __filename});
-logger.info('Deployment Tracker starting up.');
+var logger = require("./lib/logger.js").getLogger({"module": __filename});
+logger.info("Deployment Tracker starting up.");
 
-var statsd_client = require('./lib/statsd.js').init(config.statsd || {});
-var redis_client = require('./lib/redis.js').init(config.redis || {});
-redis_client.on('error', function (err) {
+var statsdClient = require("./lib/statsd.js").init(config.statsd || {});
+var redisClient = require("./lib/redis.js").init(config.redis || {});
+redisClient.on("error", function (err) {
   logger.error(err, "Error in redis_client");
-  statsd_client.increment('deployment-tracker.redis.error');
+  statsdClient.increment("deployment-tracker.redis.error");
 });
 
 var db = require("./data/models/index.js");
@@ -23,12 +28,14 @@ db.sequelize.options.logging = function(message) {
   logger.info(message);
 };
 
-app.set('config', config);
-app.set('redis', redis_client);
-app.set('statsd', statsd_client);
-app.set('db', db);
+app.set("config", config);
+app.set("redis", redisClient);
+app.set("statsd", statsdClient);
+app.set("db", db);
 
-// This takes too long and can cause some mocha tests to fail :(
+// This ensures our DB is up-to-date before we start serving traffic.
+// However, it (a) causes tests to run slower and (b) causes tests to
+// throw schema validation errors for some reason.
 //db.sequelize.sync().then(function () {
   SwaggerExpress.create(swaggerConfig, function(err, swaggerExpress) {
     if (err) { throw err; }
@@ -36,7 +43,7 @@ app.set('db', db);
     swaggerExpress.register(app);
 
     var port = config.port || 8080;
-    var host = config.host || '::';
+    var host = config.host || "::";
     app.listen(port, function(){
       console.log("Deployment Tracker listening on port " + port);
     });

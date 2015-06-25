@@ -1,0 +1,15 @@
+{
+  "camelcase": false,
+  "eqeqeq": true,
+  "curly": true,
+  "indent": 4,
+  "latedef": false,
+  "newcap": true,
+  "quotmark": "double",
+  "strict": true,
+  "node": true,
+  "mocha": true,
+  "globals": {
+    "app": true
+  }
+}

@@ -1,22 +1,22 @@
-'use strict';
+"use strict";
 
-var util = require('util');
-var statsd_client = app.get('statsd');
-var redis_client = app.get('redis');
-var db = app.get('db');
+var util = require("util");
+var statsdClient = app.get("statsd");
+var redisClient = app.get("redis");
+var db = app.get("db");
 
 // Store the last state of the different healthcheck tests that we run. The
 // /heathcheck route will return a 503 on the first failed check, but we can
 // at least return the statuses of the other checks, even if they are out of date.
 var tests = {
   redis: {
-    test_name: 'redis'
+    test_name: "redis"
   },
   statsd: {
-    test_name: 'statsd'
+    test_name: "statsd"
   },
   db: {
-    test_name: 'database'
+    test_name: "database"
   }
 };
 
@@ -26,7 +26,7 @@ module.exports = {
 };
 
 function config(req, res) {
-  res.json(app.get('config'));
+  res.json(req.app.get("config"));
 }
 
 function healthcheck(req, res) {
@@ -39,36 +39,36 @@ function healthcheck(req, res) {
 
   var redisStart = process.hrtime();
   tests.redis.tested_at = new Date().toISOString();
-  redis_client.ping(function(err, result) {
+  redisClient.ping(function(err, result) {
     tests.redis.duration_millis = elapsed_time(redisStart);
     if (err) {
-      tests.redis.test_result = 'failed';
+      tests.redis.test_result = "failed";
       finalizeReport(report, reportStart);
       res.status(503).json(report);
     } else {
-      tests.redis.test_result = 'passed';
+      tests.redis.test_result = "passed";
 
       var statsdStart = process.hrtime();
       tests.statsd.tested_at = new Date().toISOString();
-      statsd_client.increment('healthcheck', 1, 1, function(err, bytes) {
+      statsdClient.increment("healthcheck", 1, 1, function(err, bytes) {
 
         tests.statsd.duration_millis = elapsed_time(statsdStart);
         if (err) {
-          tests.statsd.test_result = 'failed';
+          tests.statsd.test_result = "failed";
           finalizeReport(report, reportStart);
           res.status(503).json(report);
         } else {
-          tests.statsd.test_result = 'passed';
+          tests.statsd.test_result = "passed";
           var dbStart = process.hrtime();
           tests.db.tested_at = new Date().toISOString();
           db.Deployment.findOne().catch(function(error) {
             tests.db.duration_millis = elapsed_time(dbStart);
-            tests.db.test_result = 'failed';
+            tests.db.test_result = "failed";
             finalizeReport(report, reportStart);
             res.status(503).json(report);
           }).then(function(deployment) {
             tests.db.duration_millis = elapsed_time(dbStart);
-            tests.db.test_result = 'passed';
+            tests.db.test_result = "passed";
             finalizeReport(report, reportStart);
             res.json(report);
           });
