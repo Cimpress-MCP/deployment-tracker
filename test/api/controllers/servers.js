@@ -90,10 +90,7 @@ describe("controllers", function() {
               throw err;
             }
 
-            console.dir(res.body);
-
             res.body.should.containEql(hostname);
-
             done();
           });
       });
