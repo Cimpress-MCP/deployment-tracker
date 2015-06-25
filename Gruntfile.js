@@ -1,29 +1,25 @@
 module.exports = function (grunt) {
-  'use strict';
+  "use strict";
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks("grunt-contrib-jshint");
+  grunt.loadNpmTasks("grunt-mocha-test");
 
   grunt.initConfig({
     jshint: {
-      all: ['*.js', '+(lib|api|data|test)/**/*.js'],
+      all: ["*.js", "+(lib|api|data|test)/**/*.js"],
       options: {
-        node: true,
-        eqeqeq: true,
-        globals: {
-          "app": true
-        }
+        jshintrc: ".jshintrc"
       }
     },
     mochaTest: {
       test: {
-        src: ['test/**/*.js']
+        src: ["test/**/*.js"]
       }
     },
     watch: {
       scripts: {
-        files: ['**/*.js', '**/*.yaml'],
-        tasks: ['jshint', 'express:dev'],
+        files: ["**/*.js", "**/*.yaml"],
+        tasks: ["jshint", "express:dev"],
         options: {
           spawn: false,
         },
@@ -35,7 +31,7 @@ module.exports = function (grunt) {
       },
       dev: {
         options: {
-          script: 'app.js',
+          script: "app.js",
           output: "Deployment Tracker listening on port .*",
           port: 8080
         }
@@ -48,9 +44,10 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('default', ['jshint', 'mochaTest']);
-  grunt.registerTask('server', ['env:dev', 'express:dev', 'watch']);
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-express-server');
-  grunt.loadNpmTasks('grunt-env');
+  grunt.registerTask("default", ["jshint", "mochaTest"]);
+  grunt.registerTask("server", ["env:dev", "express:dev", "watch"]);
+  grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-express-server");
+  grunt.loadNpmTasks("grunt-env");
+
 };

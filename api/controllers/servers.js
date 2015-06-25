@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-var logger = require('../../lib/logger.js').getLogger({'module': __filename});
+var logger = require("../../lib/logger.js").getLogger({"module": __filename});
 
-var util = require('util');
-var statsd_client = app.get('statsd');
-var redis_client = app.get('redis');
-var db = app.get('db');
+var util = require("util");
+var statsdClient = app.get("statsd");
+var redisClient = app.get("redis");
+var db = app.get("db");
 
 module.exports = {
   postServer: postServer,
@@ -16,10 +16,11 @@ module.exports = {
 
 function postServer(req, res) {
     var server = req.swagger.params.body.value;
+
     db.Server.build(server).save()
       .then(function(server) {
-        statsd_client.increment(server.hostname + ".started");
-        res.location('/deployments/' + server.deployment_id + '/servers/' + server.hostname);
+        statsdClient.increment(server.hostname + ".started");
+        res.location("/deployments/" + server.deployment_id + "/servers/" + server.hostname);
         res.status(201).end();
       })
       .catch(function (err) {
@@ -38,8 +39,9 @@ function putServer(req, res) {
       deployment_id: server.deployment_id
     }
   }).then(function (server) {
-    statsd_client.increment(server.hostname + "." + server.result);
-    statsd_client.timing(server.hostname + ".elapsed", server.elapsed_seconds);
+    statsdClient.increment(server.hostname + "." + server.result);
+    statsdClient.timing(server.hostname + ".elapsed", server.elapsed_seconds);
+
     res.status(204).end();
   }).catch(function (err) {
     logger.error(err, "Error updating server status in the database.");
@@ -51,7 +53,7 @@ function putServer(req, res) {
 function getAllServers (req, res) {
   // Sequelize #findAll has no way to SELECT Distinct (without also counting or
   // aggregating in some other way). https://github.com/sequelize/sequelize/issues/2996
-  db.sequelize.query('SELECT DISTINCT(`hostname`) FROM Servers', {})
+  db.sequelize.query("SELECT DISTINCT(`hostname`) FROM Servers", {})
     .then(function (servers) {
 
       if (servers !== null) {
@@ -61,6 +63,7 @@ function getAllServers (req, res) {
       }
 
       res.json(servers);
+
     })
     .catch(function (err) {
       logger.info(err);

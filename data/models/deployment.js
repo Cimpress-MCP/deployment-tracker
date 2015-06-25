@@ -14,7 +14,7 @@ module.exports = function (sequelize, DataTypes) {
     }, {
       classMethods: {
         associate: function(models){
-          Deployment.hasMany(models.Server, { foreignKey: 'deployment_id', as: 'servers' });
+          Deployment.hasMany(models.Server, { foreignKey: "deployment_id", as: "servers" });
         }
       }
     });

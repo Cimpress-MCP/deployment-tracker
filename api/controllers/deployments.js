@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-var logger = require('../../lib/logger.js').getLogger({'module': __filename});
+var logger = require("../../lib/logger.js").getLogger({"module": __filename});
 
-var util = require('util');
-var statsd_client = app.get('statsd');
-var redis_client = app.get('redis');
-var db = app.get('db');
+var util = require("util");
+var statsdClient = app.get("statsd");
+var redisClient = app.get("redis");
+var db = app.get("db");
 
 module.exports = {
   getDeployments: getDeployments,
@@ -16,7 +16,7 @@ module.exports = {
 
 function getDeployments(req, res) {
   db.Deployment.findAll({
-    include: [{ model: db.Server, as: 'servers' }]
+    include: [{ model: db.Server, as: "servers" }]
   }).then(function(deployments) {
     for(var i = 0; i < deployments.length; i++) {
       var deployment = deployments[i];
@@ -28,11 +28,11 @@ function getDeployments(req, res) {
 
 function postDeployment(req, res) {
   var deployment = req.swagger.params.body.value;
-  statsd_client.increment(deployment.environment + "." + deployment.package + ".started");
+  statsdClient.increment(deployment.environment + "." + deployment.package + ".started");
   db.Deployment.build(deployment).save().then(function(deployment) {
-    logger.debug('Successfully created deployment' + deployment.id);
+    logger.debug("Successfully created deployment" + deployment.id);
     logger.trace(deployment);
-    res.location('/v1/deployments/' + deployment.id);
+    res.location("/v1/deployments/" + deployment.id);
     res.status(201).end();
   }).catch(function(err) {
     logger.error(err, "Error writing deployment to database");
@@ -43,9 +43,9 @@ function postDeployment(req, res) {
 
 function getDeployment(req, res) {
   db.Deployment.findOne({
-    where: { deployment_id: req.swagger.params.id.value },
+    where: { "deployment_id": req.swagger.params.id.value },
     include: [
-      { model: db.Server, as: 'servers' }
+      { model: db.Server, as: "servers" }
     ]
   }).then(function(deployment) {
     if (deployment === null) {
@@ -59,15 +59,15 @@ function getDeployment(req, res) {
 }
 
 function putDeployment(req, res) {
-  db.Deployment.findOne({ where: { deployment_id: req.swagger.params.id.value } }).then(function(deployment) {
+  db.Deployment.findOne({ where: { "deployment_id": req.swagger.params.id.value } }).then(function(deployment) {
     if (deployment === null) {
       throw new ReferenceError("Deployment Id " + req.swagger.params.id.value + " not found!");
     } else {
       var _ = require("lodash");
       _.assign(deployment, req.body);
       deployment.save();
-      statsd_client.increment(deployment.environment + "." + deployment.package + "." + deployment.result);
-      statsd_client.timing(deployment.environment + "." + deployment.package + ".elapsed", deployment.elapsed_seconds);
+      statsdClient.increment(deployment.environment + "." + deployment.package + "." + deployment.result);
+      statsdClient.timing(deployment.environment + "." + deployment.package + ".elapsed", deployment.elapsed_seconds);
       res.status(204).end();
     }
   }).catch(function(err) {

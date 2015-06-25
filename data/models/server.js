@@ -23,7 +23,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models){
-        Server.belongsTo(models.Deployment, { foreignKey: 'deployment_id' });
+        Server.belongsTo(models.Deployment, { foreignKey: "deployment_id" });
       }
     }
   });
