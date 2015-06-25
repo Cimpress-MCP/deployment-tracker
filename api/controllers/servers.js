@@ -50,10 +50,21 @@ function putServer(req, res) {
   });
 }
 
-function getAllServers (req, res) {
+function getAllServers (req, res, next) {
+  //res.links(req.getPageLinks(req.swagger.params.offset.value, req.swagger.params.limit.value));
+
   // Sequelize #findAll has no way to SELECT Distinct (without also counting or
   // aggregating in some other way). https://github.com/sequelize/sequelize/issues/2996
-  db.sequelize.query("SELECT DISTINCT(`hostname`) FROM Servers", {})
+  /* jshint multistr: true */
+  db.sequelize.query("SELECT DISTINCT(`hostname`) \
+                      FROM Servers \
+                      ORDER BY `hostname` DESC \
+                      LIMIT :limit OFFSET :offset", {
+                        replacements: {
+                          limit: req.swagger.params.limit.value,
+                          offset: req.swagger.params.offset.value
+                        }
+                      })
     .then(function (servers) {
 
       if (servers !== null) {
@@ -62,6 +73,7 @@ function getAllServers (req, res) {
         });
       }
 
+      next();
       res.json(servers);
 
     })
@@ -69,13 +81,16 @@ function getAllServers (req, res) {
       logger.info(err);
       res.status(500).json({ "Error": err.message });
     });
+    /* jshint multistr: false */
 }
 
-function getServerByHostname (req, res) {
+function getServerByHostname (req, res, next) {
   var hostname = req.swagger.params.hostname.value;
 
   db.Server.findAll({
     where: { hostname: hostname },
+    limit: req.swagger.params.limit.value,
+    offset: req.swagger.params.offset.value,
     order: "`createdAt` DESC"
   })
     .then(function (servers) {
@@ -83,6 +98,7 @@ function getServerByHostname (req, res) {
           throw new ReferenceError("Could not find any deployments for hostname " + hostname);
         }
 
+        next();
         res.json(servers);
     })
     .catch(function(err){

@@ -83,8 +83,9 @@ describe("controllers", function() {
               throw err;
             }
             var body = res.body;
-            // These are ordered, so the last one should be the one we just created.
-            body[body.length - 1].should.have.property("deployment_id", deployment_id);
+
+            // These are reverse-ordered, so the first one should be the one we just created.
+            body[0].should.have.property('deployment_id', deployment_id);
             done();
         });
       });
