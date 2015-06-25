@@ -94,6 +94,20 @@ describe("controllers", function() {
             done();
           });
       });
+
+      it('Should support pagination', function(done) {
+        request(server)
+          .get('/v1/servers')
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+
+            res.headers.link.should.containEql('/v1/servers?offset=25&limit=25');
+            res.headers.link.should.not.containEql('rel="prev"');
+            done();
+          });
+      });
     });
 
     describe("GET /v1/servers/{hostname}", function () {
@@ -107,6 +121,20 @@ describe("controllers", function() {
 
             var body = res.body;
             body[0].should.have.property("deployment_id", deployment_id);
+            done();
+          });
+      });
+
+      it('Should support pagination', function(done) {
+        request(server)
+          .get('/v1/servers/' + hostname)
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+
+            res.headers.link.should.containEql('/v1/servers/' + hostname + '?offset=25&limit=25');
+            res.headers.link.should.not.containEql('rel="prev"');
             done();
           });
       });
