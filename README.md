@@ -21,7 +21,7 @@ curl -X POST -H 'Content-Type:application/json'  http://server:port/v1/deploymen
 curl -X POST -H 'Content-Type: application/json' http://server:port/v1/deployments/84e803f7-9562-4d95-b828-25b167aea34b -d '{"message": "Starting deployment phase 1", "severity": "info"}'
 
 
-# Record the compleation of a deployment
+# Record the completion of a deployment
 curl -X PUT -H 'Content-Type:application/json' http://server:port/v1/deployments/84e803f7-9562-4d95-b828-25b167aea34b -d '{"deployment_id": "84e803f7-9562-4d95-b828-25b167aea34b", "result": "success", "elapsed_seconds": 234}'
 ```
 

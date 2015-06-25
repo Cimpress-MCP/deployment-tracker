@@ -28,14 +28,19 @@ app.set('redis', redis_client);
 app.set('statsd', statsd_client);
 app.set('db', db);
 
-SwaggerExpress.create(swaggerConfig, function(err, swaggerExpress) {
-  if (err) { throw err; }
+// This takes too long and can cause some mocha tests to fail :(
+//db.sequelize.sync().then(function () {
+  SwaggerExpress.create(swaggerConfig, function(err, swaggerExpress) {
+    if (err) { throw err; }
 
-  swaggerExpress.register(app);
+    swaggerExpress.register(app);
 
-  var port = config.port || 8080;
-  var host = config.host || '::';
-  app.listen(port);
-  console.log("Deployment Tracker listening on port " + port);
-});
+    var port = config.port || 8080;
+    var host = config.host || '::';
+    app.listen(port, function(){
+      console.log("Deployment Tracker listening on port " + port);
+    });
+
+  });
+//});
 console.log("Deployment Tracker started");

@@ -171,6 +171,44 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /v1/servers:
+    x-swagger-router-controller: servers
+    get:
+      description: Return a list of all servers that have been deployed to
+      operationId: getAllServers
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /v1/servers/{hostname}:
+    x-swagger-router-controller: servers
+    get:
+      description: Return a list of all servers that have been deployed to
+      operationId: getServerByHostname
+      parameters:
+        - name: hostname
+          in: path
+          description: The hostname for the server
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Server"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /config:
     x-swagger-router-controller: admin
@@ -205,9 +243,9 @@ definitions:
         type: object
   ErrorResponse:
     required:
-      - message
+      - Error
     properties:
-      message:
+      Error:
         type: string
   Deployment:
     type: object
@@ -247,6 +285,11 @@ definitions:
       elapsed_seconds:
         type: integer
         description: The elapsed time of the deployment, in seconds
+      servers:
+        type: array
+        description: The servers that participated in the deployment
+        items:
+          $ref: "#/definitions/Server"
   Server:
     required:
       - deployment_id

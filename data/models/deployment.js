@@ -1,7 +1,7 @@
 "use strict";
 module.exports = function (sequelize, DataTypes) {
     var Deployment = sequelize.define("Deployment", {
-        deployment_id: DataTypes.UUID,
+        deployment_id: { type: DataTypes.UUID, primaryKey: true },
         engine: DataTypes.STRING,
         engine_version: DataTypes.STRING,
         host: DataTypes.STRING,
@@ -11,6 +11,13 @@ module.exports = function (sequelize, DataTypes) {
         version: DataTypes.STRING,
         result: DataTypes.STRING,
         elapsed_seconds: DataTypes.INTEGER
+    }, {
+      classMethods: {
+        associate: function(models){
+          Deployment.hasMany(models.Server, { foreignKey: 'deployment_id', as: 'servers' });
+        }
+      }
     });
+
     return Deployment;
 };
