@@ -16,7 +16,7 @@ Outputs include:
 
 ```
 # Record the start of a deployment
-curl -X POST -H 'Content-Type:application/json'  http://server:port/v1/deployments/84e803f7-9562-4d95-b828-25b167aea34b -d '{"deployment_id": 84e803f7-9562-4d95-b828-25b167aea34b, "engine": "vagrant_orchestrate", "engine_version": "0.6.3", "host": "localhost", "user": "cbaldauf", "environment": "dev", "package": "test", "version": "4.5.6"}'
+curl -X POST -H 'Content-Type:application/json' http://server:port/v1/deployments/84e803f7-9562-4d95-b828-25b167aea34b -d '{"deployment_id": 84e803f7-9562-4d95-b828-25b167aea34b, "engine": "vagrant_orchestrate", "engine_version": "0.6.3", "host": "localhost", "user": "cbaldauf", "environment": "dev", "package": "test", "version": "4.5.6"}'
 
 # Record some log messages
 curl -X POST -H 'Content-Type: application/json' http://server:port/v1/deployments/84e803f7-9562-4d95-b828-25b167aea34b -d '{"message": "Starting deployment phase 1", "severity": "info"}'
