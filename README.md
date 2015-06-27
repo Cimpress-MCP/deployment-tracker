@@ -26,7 +26,7 @@ curl -X PUT -H 'Content-Type:application/json' http://server:port/v1/deployments
 ```
 
 The service also supports tracking deployments on individual servers, using the
-/v1/deployments/{id}/servers route
+`/v1/deployments/{id}/servers` route
 
 ## API Docs
 Full API docs are available at http://localhost:8080/swagger.json
