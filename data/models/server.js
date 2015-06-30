@@ -25,6 +25,17 @@ module.exports = function (sequelize, DataTypes) {
       associate: function(models){
         Server.belongsTo(models.Deployment, { foreignKey: "deployment_id" });
       }
+    },
+    instanceMethods: {
+      deleteNullValues: function() {
+        if (this.dataValues.result === null) {
+          delete this.dataValues.result;
+        }
+        if (this.dataValues.elapsed_seconds === null) {
+          delete this.dataValues.elapsed_seconds;
+        }
+        return this;
+      }
     }
   });
 

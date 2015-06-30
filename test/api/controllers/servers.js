@@ -40,9 +40,7 @@ describe("controllers", function() {
       var testServer = {
         deployment_id: deployment_id,
         hostname: hostname,
-        ip_address: "127.0.0.1",
-        result: "success",
-        elapsed_seconds: 123
+        ip_address: "127.0.0.1"
       };
 
       it("Should be able to signal the start of a deployment to a server", function (done) {
@@ -60,7 +58,7 @@ describe("controllers", function() {
 
     });
 
-    describe("PUT /v1/deployments/{id}/servers", function () {
+/*    describe("PUT /v1/deployments/{id}/servers", function () {
       var status = {
         deployment_id: deployment_id,
         hostname: hostname,
@@ -80,7 +78,7 @@ describe("controllers", function() {
           });
       });
     });
-
+*/
     describe("GET /v1/servers", function () {
       it("Should be able to query the database for servers that have been deployed to", function(done) {
         request(server)
@@ -89,7 +87,6 @@ describe("controllers", function() {
             if (err) {
               throw err;
             }
-
             res.body.should.containEql(hostname);
             done();
           });
