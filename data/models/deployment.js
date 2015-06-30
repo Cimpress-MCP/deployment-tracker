@@ -22,12 +22,13 @@ module.exports = function (sequelize, DataTypes) {
       },
       instanceMethods: {
         deleteNullValues: function() {
-          if (this.dataValues.result === null) {
-            delete this.dataValues.result;
-          }
-          if (this.dataValues.elapsed_seconds === null) {
-            delete this.dataValues.elapsed_seconds;
-          }
+          var dataValues = this.dataValues;
+          Object.keys(dataValues).forEach(function(key) {
+            if (dataValues[key] === null) {
+              delete dataValues[key];
+            }
+          });
+          this.dataValues = dataValues;
           return this;
         }
       }
