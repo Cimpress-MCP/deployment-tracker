@@ -58,7 +58,7 @@ describe("controllers", function() {
 
     });
 
-/*    describe("PUT /v1/deployments/{id}/servers", function () {
+    describe("PUT /v1/deployments/{id}/servers", function () {
       var status = {
         deployment_id: deployment_id,
         hostname: hostname,
@@ -78,7 +78,7 @@ describe("controllers", function() {
           });
       });
     });
-*/
+
     describe("GET /v1/servers", function () {
       it("Should be able to query the database for servers that have been deployed to", function(done) {
         request(server)
