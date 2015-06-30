@@ -21,9 +21,9 @@ function getDeployments(req, res, next) {
     offset: req.swagger.params.offset.value,
     order: [ ["createdAt", "DESC"] ]
   }).then(function(deployments) {
-    deployments.map(function(deployment) {
+    deployments.forEach(function(deployment) {
       deployment.deleteNullValues();
-      deployment.servers.map(function(server) {
+      deployment.servers.forEach(function(server) {
         server.deleteNullValues();
       });
     });
@@ -60,7 +60,7 @@ function getDeployment(req, res) {
     if (deployment === null) {
       throw new ReferenceError("Deployment Id " + req.swagger.params.id.value + " not found!");
     } else {
-      deployment.servers.map(function(server) {
+      deployment.servers.forEach(function(server) {
         server.deleteNullValues();
       });
       res.json(deployment.deleteNullValues());

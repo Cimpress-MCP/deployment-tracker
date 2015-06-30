@@ -95,7 +95,7 @@ function getServerByHostname (req, res, next) {
         if (servers.length === 0) {
           throw new ReferenceError("Could not find any deployments for hostname " + hostname);
         }
-        servers.map(function(server) {
+        servers.forEach(function(server) {
           server.deleteNullValues();
         });
 
