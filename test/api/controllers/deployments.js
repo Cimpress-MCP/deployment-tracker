@@ -76,7 +76,8 @@ describe("controllers", function() {
         var status = {
           deployment_id: deployment_id,
           result: "success",
-          elapsed_seconds: 234
+          elapsed_seconds: 234,
+          assert_empty_server_result: true
         };
         request(server)
           .put("/v1/deployments/" + deployment_id)
