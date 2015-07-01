@@ -71,13 +71,20 @@ function getDeployment(req, res) {
 }
 
 function putDeployment(req, res) {
-  db.Deployment.findOne({ where: { "deployment_id": req.swagger.params.id.value } }).then(function(deployment) {
+  db.Deployment.findOne({
+    where: { "deployment_id": req.swagger.params.id.value }
+  }).then(function(deployment) {
     if (deployment === null) {
       throw new ReferenceError("Deployment Id " + req.swagger.params.id.value + " not found!");
     } else {
       var _ = require("lodash");
       _.assign(deployment, req.body);
       deployment.save();
+
+      if ((deployment.result !== null) && deployment.assert_empty_server_result) {
+        assertEmptyServerResult(deployment.deployment_id, deployment.result);
+      }
+
       deployment.message = "Deployment Tracker recording deployment end for deployment " + deployment.deployment_id;
       redisClient.rpush("deployment-tracker", JSON.stringify(deployment));
       statsdClient.increment(deployment.environment + "." + deployment.package + "." + deployment.result);
@@ -86,5 +93,28 @@ function putDeployment(req, res) {
     }
   }).catch(function(err) {
     res.status(500).json({ "Error": err.message });
+  });
+}
+
+/**
+ * Assert a given result to any server that is both associated with the given
+ * deployment_id and currently has an empty (null) result.
+ **/
+function assertEmptyServerResult(deploymentId, result) {
+  db.Server.update(
+    { result: result },
+    { where:
+      db.Sequelize.and (
+        { deployment_id: deploymentId },
+        { result: null }
+      )
+    }
+  ).then(function(count) {
+    if (count > 0) {
+      logger.info("Updated " + count + " empty server results for deployment " + deploymentId);
+    }
+  }).catch(function(err) {
+    logger.error(err, "Error updaring empty server results for deployment " + deploymentId);
+    throw err;
   });
 }

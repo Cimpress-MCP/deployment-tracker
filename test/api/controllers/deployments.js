@@ -36,7 +36,6 @@ describe("controllers", function() {
       });
     });
 
-
     describe("GET /v1/deployments/{id}", function() {
       it("Should be able to retrieve a recently created deployment", function(done) {
         request(server)
@@ -51,6 +50,24 @@ describe("controllers", function() {
             body.should.have.property("version", "4.5.6");
             done();
         });
+      });
+    });
+
+    describe("POST /v1/deployment/{id}/servers", function() {
+      it("Should create a server start record", function(done) {
+        request(server)
+          .post("/v1/deployments/" + deployment_id + "/servers")
+          .send({
+            deployment_id: deployment_id,
+            hostname: "hostname"
+          })
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+            res.should.have.property("status", 201);
+            done();
+          });
       });
     });
 
@@ -83,7 +100,6 @@ describe("controllers", function() {
               throw err;
             }
             var body = res.body;
-
             // These are reverse-ordered, so the first one should be the one we just created.
             body[0].should.have.property("deployment_id", deployment_id);
             done();

@@ -311,6 +311,9 @@ definitions:
       elapsed_seconds:
         type: integer
         description: The elapsed time of the deployment, in seconds
+      assert_empty_server_result:
+        type: boolean
+        description: Whether or not to assert the result of a deployment to any server that doesn't have a result at the time the deployment is marked complete
       servers:
         type: array
         description: The servers that participated in the deployment
