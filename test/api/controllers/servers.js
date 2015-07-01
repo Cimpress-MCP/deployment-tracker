@@ -40,9 +40,7 @@ describe("controllers", function() {
       var testServer = {
         deployment_id: deployment_id,
         hostname: hostname,
-        ip_address: "127.0.0.1",
-        result: "success",
-        elapsed_seconds: 123
+        ip_address: "127.0.0.1"
       };
 
       it("Should be able to signal the start of a deployment to a server", function (done) {
@@ -89,7 +87,6 @@ describe("controllers", function() {
             if (err) {
               throw err;
             }
-
             res.body.should.containEql(hostname);
             done();
           });

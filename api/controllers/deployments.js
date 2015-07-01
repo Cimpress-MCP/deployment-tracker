@@ -21,10 +21,12 @@ function getDeployments(req, res, next) {
     offset: req.swagger.params.offset.value,
     order: [ ["createdAt", "DESC"] ]
   }).then(function(deployments) {
-    for(var i = 0; i < deployments.length; i++) {
-      var deployment = deployments[i];
-      deleteNullValues(deployment.dataValues);
-    }
+    deployments.forEach(function(deployment) {
+      deployment.deleteNullValues();
+      deployment.servers.forEach(function(server) {
+        server.deleteNullValues();
+      });
+    });
 
     next();
     res.json(deployments);
@@ -58,7 +60,10 @@ function getDeployment(req, res) {
     if (deployment === null) {
       throw new ReferenceError("Deployment Id " + req.swagger.params.id.value + " not found!");
     } else {
-      res.json(deleteNullValues(deployment.dataValues));
+      deployment.servers.forEach(function(server) {
+        server.deleteNullValues();
+      });
+      res.json(deployment.deleteNullValues());
     }
   }).catch(function(err) {
     res.status(500).json({ "Error": err.message });
@@ -82,15 +87,4 @@ function putDeployment(req, res) {
   }).catch(function(err) {
     res.status(500).json({ "Error": err.message });
   });
-}
-
-// This is gross. Fire me.
-function deleteNullValues(deployment) {
-  if (deployment.result === null) {
-    delete deployment.result;
-  }
-  if (deployment.elapsed_seconds === null) {
-    delete deployment.elapsed_seconds;
-  }
-  return deployment;
 }
