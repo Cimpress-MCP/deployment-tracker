@@ -16,7 +16,9 @@ var deployment = {
   user: "cbaldauf",
   environment: "dev",
   package: "test",
-  version: "4.5.6"
+  package_url: "http://foo.com",
+  version: "4.5.6",
+  arguments: "--myarg1 --myarg2"
 };
 
 describe("controllers", function() {
@@ -49,6 +51,8 @@ describe("controllers", function() {
             body.should.have.property("deployment_id", deployment_id);
             body.should.have.property("engine", "vagrant_orchestrate");
             body.should.have.property("version", "4.5.6");
+            body.should.have.property("package_url", "http://foo.com");
+            body.should.have.property("arguments", "--myarg1 --myarg2");
             done();
         });
       });

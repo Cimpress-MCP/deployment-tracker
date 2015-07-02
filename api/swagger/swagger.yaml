@@ -299,9 +299,15 @@ definitions:
       package:
         type: string
         description: The name of the software application or service being deployed
+      package_url:
+        type: string
+        description: A URL that points to more information about the package
       version:
         type: string
         description: The version of the package being deployed
+      arguments:
+        type: string
+        description: Any arguments used for the deployment
       result:
         type: string
         description: The result of running the deployment
