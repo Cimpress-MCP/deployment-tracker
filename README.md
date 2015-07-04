@@ -1,5 +1,5 @@
 # Deployment Tracker
-Collect deployment metadata from various deployment engines and forwards them along to purpose-driven application endpoints for storage and analysis later.
+Collect deployment metadata from various deployment engines and forward them along to purpose-driven application endpoints for storage and analysis later.
 
 Outputs include:
 
