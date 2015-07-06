@@ -19,7 +19,7 @@ function postServer(req, res) {
 
     db.Server.build(server).save()
       .then(function(server) {
-        statsdClient.increment(server.hostname + ".started");
+        statsdClient.increment("servers.hostname." + statsdClient.escape(server.hostname) + ".started");
         res.location("/deployments/" + server.deployment_id + "/servers/" + server.hostname);
         res.status(201).end();
       })
@@ -38,9 +38,10 @@ function putServer(req, res) {
       hostname: server.hostname,
       deployment_id: server.deployment_id
     }
-  }).then(function (server) {
-    statsdClient.increment(server.hostname + "." + server.result);
-    statsdClient.timing(server.hostname + ".elapsed", server.elapsed_seconds);
+  }).then(function (count) {
+    var hostname = statsdClient.escape(server.hostname);
+    statsdClient.increment("servers.hostname." + hostname + "." + server.result);
+    statsdClient.timing("servers.hostname." + hostname + ".elapsed", server.elapsed_seconds);
 
     res.status(204).end();
   }).catch(function (err) {
