@@ -35,7 +35,9 @@ function getDeployments(req, res, next) {
 
 function postDeployment(req, res) {
   var deployment = req.swagger.params.body.value;
-  statsdClient.increment(deployment.environment + "." + deployment.package + ".started");
+  statsdClient.increment("deployments.started");
+  var prefix = "deployments.environments." + statsdClient.escape(deployment.environment) + ".packages." + statsdClient.escape(deployment.package) + ".";
+  statsdClient.increment(prefix + ".started");
   deployment.message = "Deployment Tracker recording deployment start for deployment " + deployment.deployment_id;
   redisClient.rpush("deployment-tracker", JSON.stringify(deployment));
   db.Deployment.build(deployment).save().then(function(deployment) {
@@ -87,8 +89,12 @@ function putDeployment(req, res) {
 
       deployment.message = "Deployment Tracker recording deployment end for deployment " + deployment.deployment_id;
       redisClient.rpush("deployment-tracker", JSON.stringify(deployment));
-      statsdClient.increment(deployment.environment + "." + deployment.package + "." + deployment.result);
-      statsdClient.timing(deployment.environment + "." + deployment.package + ".elapsed", deployment.elapsed_seconds);
+
+      statsdClient.increment("deployments." + deployment.result);
+      statsdClient.timing("deployments.elapsed", deployment.elapsed_seconds);
+      var prefix = "deployments.environments." + statsdClient.escape(deployment.environment) + ".packages." + statsdClient.escape(deployment.package) + ".";
+      statsdClient.increment(prefix + deployment.result);
+      statsdClient.timing(prefix + ".elapsed", deployment.elapsed_seconds);
       res.status(204).end();
     }
   }).catch(function(err) {
