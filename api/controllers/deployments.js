@@ -35,16 +35,21 @@ function getDeployments(req, res, next) {
 
 function postDeployment(req, res) {
   var deployment = req.swagger.params.body.value;
-  statsdClient.increment("deployments.started");
-  var prefix = "deployments.environments." + statsdClient.escape(deployment.environment) + ".packages." + statsdClient.escape(deployment.package) + ".";
-  statsdClient.increment(prefix + ".started");
-  deployment.message = "Deployment Tracker recording deployment start for deployment " + deployment.deployment_id;
-  redisClient.rpush("deployment-tracker", JSON.stringify(deployment));
   db.Deployment.build(deployment).save().then(function(deployment) {
     logger.debug("Successfully created deployment" + deployment.id);
     logger.trace(deployment);
-    res.location("/v1/deployments/" + deployment.id);
-    res.status(201).end();
+
+    deployment.message = "Deployment Tracker recording deployment start for deployment " + deployment.deployment_id;
+    redisClient.rpush("deployment-tracker", JSON.stringify(deployment), function(err, result) {
+      if (err) {
+        res.status(500).json({ "error": err.message});
+      }
+      statsdClient.increment("deployments.started");
+      var prefix = "deployments.environments." + statsdClient.escape(deployment.environment) + ".packages." + statsdClient.escape(deployment.package) + ".";
+      statsdClient.increment(prefix + ".started");
+      res.location("/v1/deployments/" + deployment.id);
+      res.status(201).end();
+    });
   }).catch(function(err) {
     logger.error(err, "Error writing deployment to database");
     logger.error(deployment);
@@ -81,21 +86,26 @@ function putDeployment(req, res) {
     } else {
       var _ = require("lodash");
       _.assign(deployment, req.body);
-      deployment.save();
+      deployment.save().then(function(result) {
+        if ((deployment.result !== null) && deployment.assert_empty_server_result) {
+          assertEmptyServerResult(deployment.deployment_id, deployment.result);
+        }
 
-      if ((deployment.result !== null) && deployment.assert_empty_server_result) {
-        assertEmptyServerResult(deployment.deployment_id, deployment.result);
-      }
+        deployment.message = "Deployment Tracker recording deployment end for deployment " + deployment.deployment_id;
+        redisClient.rpush("deployment-tracker", JSON.stringify(deployment), function(err, result) {
+          if (err) {
+            res.status(500).json({ "error": err.message});
+          }
 
-      deployment.message = "Deployment Tracker recording deployment end for deployment " + deployment.deployment_id;
-      redisClient.rpush("deployment-tracker", JSON.stringify(deployment));
+          statsdClient.increment("deployments." + deployment.result);
+          statsdClient.timing("deployments.elapsed", deployment.elapsed_seconds);
+          var prefix = "deployments.environments." + statsdClient.escape(deployment.environment) + ".packages." + statsdClient.escape(deployment.package) + ".";
+          statsdClient.increment(prefix + deployment.result);
+          statsdClient.timing(prefix + ".elapsed", deployment.elapsed_seconds);
+          res.status(204).end();
+        });
 
-      statsdClient.increment("deployments." + deployment.result);
-      statsdClient.timing("deployments.elapsed", deployment.elapsed_seconds);
-      var prefix = "deployments.environments." + statsdClient.escape(deployment.environment) + ".packages." + statsdClient.escape(deployment.package) + ".";
-      statsdClient.increment(prefix + deployment.result);
-      statsdClient.timing(prefix + ".elapsed", deployment.elapsed_seconds);
-      res.status(204).end();
+      });
     }
   }).catch(function(err) {
     res.status(500).json({ "Error": err.message });
