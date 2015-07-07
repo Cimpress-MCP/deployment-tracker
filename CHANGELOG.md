@@ -1,3 +1,7 @@
+0.1.5 (July 7th, 2015)
+
+  - Bump version for first publish to npm
+
 0.1.4 (July 6th, 2015)
 
   - Rationalize statsd metrics to make them more easily navigable.
