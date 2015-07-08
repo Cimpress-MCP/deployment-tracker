@@ -1,6 +1,6 @@
 {
   "name": "deployment-tracker",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Collect deployment metadata and store it in purpose-driven data stores",
   "keywords": [],
   "author": "",
