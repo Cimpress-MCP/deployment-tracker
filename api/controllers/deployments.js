@@ -39,8 +39,9 @@ function postDeployment(req, res) {
     logger.debug("Successfully created deployment" + deployment.id);
     logger.trace(deployment);
 
-    deployment.message = "Deployment Tracker recording deployment start for deployment " + deployment.deployment_id;
-    redisClient.rpush("deployment-tracker", JSON.stringify(deployment), function(err, result) {
+    var log = redisClient.updateLogMessage(deployment.get());
+    log.message = "Deployment Tracker recording deployment start for deployment " + deployment.deployment_id;
+    redisClient.rpush(redisClient.key, JSON.stringify(log), function(err, result) {
       if (err) {
         res.status(500).json({ "error": err.message});
       }
@@ -91,8 +92,9 @@ function putDeployment(req, res) {
           assertEmptyServerResult(deployment.deployment_id, deployment.result);
         }
 
-        deployment.message = "Deployment Tracker recording deployment end for deployment " + deployment.deployment_id;
-        redisClient.rpush("deployment-tracker", JSON.stringify(deployment), function(err, result) {
+        var log = redisClient.updateLogMessage(deployment.get());
+        log.message = "Deployment Tracker recording deployment end for deployment " + deployment.deployment_id;
+        redisClient.rpush(redisClient.key, JSON.stringify(log), function(err, result) {
           if (err) {
             res.status(500).json({ "error": err.message});
           }

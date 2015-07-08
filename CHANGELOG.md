@@ -1,3 +1,7 @@
+0.1.9 (July 8th, 2015)
+
+  - Add support for redis config values such as key, index, and additional_fields.
+
 0.1.5 (July 7th, 2015)
 
   - Bump version for first publish to npm

@@ -14,7 +14,8 @@ module.exports = {
 function postLogs(req, res) {
   var message = req.swagger.params.body.value;
   message.deployment_id = req.swagger.params.id.value;
-  redisClient.rpush("deployment-tracker", JSON.stringify(message), function(err, result) {
+  message = redisClient.updateLogMessage(message);
+  redisClient.rpush(redisClient.key, JSON.stringify(message), function(err, result) {
     if (err) {
       res.status(500).json({ "error" : err.message});
     } else {

@@ -3,7 +3,7 @@ Collect deployment metadata from various deployment engines and forward them alo
 
 Outputs include:
 
-1. Logstash (ELK stack) for log messages
+1. Logstash (ELK stack) via Redis for log messages
 2. Statsd for metrics aggregation
 3. SQL database table for long-lived deployment summary information
 
@@ -31,11 +31,65 @@ The service also supports tracking deployments on individual servers, using the
 ## API Docs
 Full API docs are available at http://localhost:8080/swagger.json
 
+## Configuration
+Configuration lives in the config.js file at the root of the package. Currently
+the recommendation is to overwrite the file, but support for specifying an alternate
+file via an environment variable is envisioned.
+
+A sample config might look something like this:
+```
+{
+  redis :
+  {
+    host: "myredishost.mydomain.com"
+  },
+  statsd :
+  {
+    host: "mystatsdhost.mydomain.com",
+    prefix: "deployment-tracker"
+  }
+}
+```
+### Redis
+
+The redis output represents a step in the path toward showing up in Logstash (Elastic's ELK stack). Of course,
+there are other ways to get data into ElasticSearch / LogStash, but deployment-tracker currently only supports
+redis. If you're interested in a different logging output format or transport mechanism, please open an issue.
+
+| Field             | Type    | Default            | Notes |
+|-------------------|---------|--------------------|-------|
+| host              | string  | 127.0.0.1          | The redis host to send log messages to |
+| port              | integer | 6379               | The redis port to send log messages to |
+| index             | string  | deployment-tracker | The index name to include in the log message |
+| key               | string  | logstash           | The redis key to which messages are appended |
+| additional_fileds | hash    | { }                | A hash of additional fields that will be merged into each log message that is sent to redis |
+
+The config.redis object is passed directly to the constructor of the redis client implementation (in this case ioredis),
+so any of the [ioredis connection options](https://github.com/luin/ioredis#connect-to-redis) should be supported.
+
+```
+{
+  redis :
+  {
+    host : "myredishost.mydomain.com",
+    port : 6379,
+    index : "deployment-tracker",
+    key : "logstash",
+    additional_fields :
+    {
+        foo: "This will be appended to every log message"
+        bar: "So will this"
+    }
+  }
+}
+```
+
 ## Development
 1. Clone this repo
 2. Spin up required infrastructure by running `vagrant up`
 2. Make changes
 3. Test locally using the `grunt` command
+  - Alternatively, you can mock the redis endpoint with `DEPLOYMENT_TRACKER_MOCK_REDIS=true grunt`
 4. Spin up a Vagrant box to test the deployment using the `vagrant up` command
 5. File a pull request
 
