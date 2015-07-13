@@ -19,7 +19,7 @@ describe("controllers", function() {
         };
         request(server)
           .post("/v1/deployments/" + uuid.v4() + "/logs/")
-          .send(log_message)
+          .send([log_message, log_message, log_message])
           .end(function(err, res) {
             if (err) {
               throw err;

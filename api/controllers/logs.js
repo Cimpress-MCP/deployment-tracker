@@ -12,15 +12,17 @@ module.exports = {
 };
 
 function postLogs(req, res) {
-  var message = req.swagger.params.body.value;
-  message.deployment_id = req.swagger.params.id.value;
-  message = redisClient.updateLogMessage(message);
-  redisClient.rpush(redisClient.key, JSON.stringify(message), function(err, result) {
-    if (err) {
-      res.status(500).json({ "error" : err.message});
-    } else {
-      statsdClient.increment("logs.message");
-      res.status(201).end();
-    }
+  var messages = req.swagger.params.body.value;
+  messages.forEach(function(message) {
+    message.deployment_id = req.swagger.params.id.value;
+    message = redisClient.updateLogMessage(message);
+    redisClient.rpush(redisClient.key, JSON.stringify(message), function(err, result) {
+      if (err) {
+        res.status(500).json({ "error" : err.message});
+      } else {
+        statsdClient.increment("logs.message");
+      }
+    });
   });
+  res.status(201).end();
 }

@@ -134,7 +134,9 @@ paths:
           description: The log message to be recorded
           required: true
           schema:
-            $ref: "#/definitions/LogMessage"
+            type: array
+            items:
+              $ref: "#/definitions/LogMessage"
       responses:
         "201":
           description: Success
