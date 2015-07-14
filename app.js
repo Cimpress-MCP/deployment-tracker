@@ -33,10 +33,22 @@ app.set("redis", redisClient);
 app.set("statsd", statsdClient);
 app.set("db", db);
 
-// This ensures our DB is up-to-date before we start serving traffic.
-// However, it (a) causes tests to run slower and (b) causes tests to
-// throw schema validation errors for some reason.
-//db.sequelize.sync().then(function () {
+var Umzug = require("umzug");
+var umzug = new Umzug({
+  storage: "sequelize",
+  storageOptions: {
+    sequelize: db.sequelize
+  },
+  migrations: {
+    path: "data/migrations",
+    params: [ db.sequelize.getQueryInterface(),
+              db.sequelize.constructor
+    ],
+  }
+});
+
+// Run all pending migrations and start the application afterward.
+umzug.up().then(function(){
   SwaggerExpress.create(swaggerConfig, function(err, swaggerExpress) {
     if (err) { throw err; }
 
@@ -50,5 +62,4 @@ app.set("db", db);
     });
 
   });
-//});
-console.log("Deployment Tracker started");
+});

@@ -7,6 +7,20 @@ var server = require("../../../app");
 process.env.A127_ENV = "test";
 
 describe("controllers", function() {
+
+  // Before running any tests, give the application time to start up.
+  // Since we're running migrations at app start, it's possible express
+  // wouldn't yet be listening by the time we start running tests against
+  // it.
+  before(function(done){
+    this.timeout(5000);
+    setTimeout(function () {
+      request(server).get("/")
+        .end(function(err,res){
+          done();
+        });
+    }, 2000);
+  });
   describe("admin", function() {
     describe("GET /config", function() {
       it("can retrieve config", function(done) {
@@ -16,9 +30,11 @@ describe("controllers", function() {
             if (err) {
               throw err;
             }
+
             res.should.have.property("status", 200);
             var config = require("../../../config.json");
             res.body.should.eql(config);
+
             done();
           });
       });
