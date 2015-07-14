@@ -11,7 +11,7 @@ var swaggerConfig = {
   appRoot: __dirname // required config
 };
 
-var config = require("./config.js");
+var config = require("./config.json");
 
 var logger = require("./lib/logger.js").getLogger({"module": __filename});
 logger.info("Deployment Tracker starting up.");

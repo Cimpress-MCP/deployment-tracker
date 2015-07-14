@@ -17,7 +17,7 @@ describe("controllers", function() {
               throw err;
             }
             res.should.have.property("status", 200);
-            var config = require("../../../config.js");
+            var config = require("../../../config.json");
             res.body.should.eql(config);
             done();
           });
