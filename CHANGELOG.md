@@ -1,4 +1,4 @@
-0.1.12 (Unreleased)
+0.1.12 (July 16th, 2015)
 
   - Force the redis healthcheck (ping) to timeout after 2 seconds. This will cause
   the healthcheck to return either a 503 of 200 after 2 seconds, rather than timing
