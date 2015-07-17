@@ -10,6 +10,12 @@
     "development": {
       "storage": "data.sqlite3",
       "dialect": "sqlite"
+    },
+    "test_redaction": {
+      "host": "127.0.0.1",
+      "database": "deployment_tracker",
+      "username": "sa",
+      "password": "your password here"
     }
   }
 }
