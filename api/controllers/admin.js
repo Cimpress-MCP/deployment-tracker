@@ -1,9 +1,10 @@
 "use strict";
 
-var util = require("util");
-var statsdClient = app.get("statsd");
-var redisClient = app.get("redis");
-var db = app.get("db");
+var util = require("util"),
+    statsdClient = app.get("statsd"),
+    redisClient = app.get("redis"),
+    db = app.get("db"),
+    redactor = require("loofah").object_keys(["password"]);
 
 module.exports = {
   config: config,
@@ -11,7 +12,7 @@ module.exports = {
 };
 
 function config(req, res) {
-  res.json(req.app.get("config"));
+  res.json(redactor(req.app.get("config")));
 }
 
 function healthcheck(req, res) {

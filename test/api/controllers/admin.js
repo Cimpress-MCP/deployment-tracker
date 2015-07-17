@@ -33,11 +33,39 @@ describe("controllers", function() {
 
             res.should.have.property("status", 200);
             var config = require("../../../config.json");
-            res.body.should.eql(config);
+
+            // We expect differences under database,
+            // so only check against config items we know
+            // will be the same.
+            res.body.redis.should.eql(config.redis);
+            res.body.statsd.should.eql(config.statsd);
+            res.body.hasOwnProperty("database").should.eql(true);
 
             done();
           });
       });
+
+      it("should redact passwords", function(done) {
+        request(server)
+          .get("/config")
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+
+            res.should.have.property("status", 200);
+
+            var config = require("../../../config.json"),
+                realPassword = config.database.test_redaction.password,
+                returnedPassword = res.body.database.test_redaction.password;
+
+            returnedPassword.should.not.eql(realPassword);
+            returnedPassword.should.eql("[REDACTED]");
+
+            done();
+          });
+      });
+
     });
 
     describe("GET /healthcheck", function() {
