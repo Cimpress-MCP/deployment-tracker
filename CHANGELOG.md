@@ -1,3 +1,7 @@
+0.1.13 (July 17th, 2015)
+
+ - Redact any config value with a key of `password` from the `/config` route.
+
 0.1.12 (July 16th, 2015)
 
   - Force the redis healthcheck (ping) to timeout after 2 seconds. This will cause
