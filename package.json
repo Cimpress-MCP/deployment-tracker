@@ -3,7 +3,15 @@
   "version": "0.1.13",
   "description": "Collect deployment metadata and store it in purpose-driven data stores",
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Cimpress MCP Infrastructure",
+    "email": "mcp_infrastructure@cimpress.com",
+    "url": "https://github.com/Cimpress-MCP"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/Cimpress-MCP/deployment-tracker.git"
+  },
   "license": "Apache 2",
   "main": "app.js",
   "dependencies": {

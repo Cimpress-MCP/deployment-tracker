@@ -1,6 +1,11 @@
+0.1.14 (July 27th, 2015)
+
+  - Update healthcheck test format to be friendlier for json parsing. For example:
+  https://github.com/sensu/sensu-community-plugins/blob/master/plugins/http/check-http-json.rb
+
 0.1.13 (July 17th, 2015)
 
- - Redact any config value with a key of `password` from the `/config` route.
+  - Redact any config value with a key of `password` from the `/config` route.
 
 0.1.12 (July 16th, 2015)
 
