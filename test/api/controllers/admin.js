@@ -78,20 +78,20 @@ describe("controllers", function() {
             }
             res.should.have.property("status", 200);
             var report = res.body;
-            report.should.have.property("report_as_of");
+            report.should.have.property("generated_at");
             report.should.have.property("duration_millis");
             report.should.have.property("tests");
             var tests = report.tests;
-            tests.length.should.be.above(0);
-            for(var index in tests) {
-              var test = tests[index];
+            Object.keys(tests).length.should.be.above(0);
+            Object.keys(tests).forEach(function(key) {
+              var test = tests[key];
               test.should.have.property("duration_millis");
               test.duration_millis.should.be.greaterThan(0);
               test.should.have.property("test_name");
-              test.should.have.property("test_result");
-              test.test_result.should.eql("passed");
+              test.should.have.property("result");
+              test.result.should.eql("passed");
               test.should.have.property("tested_at");
-            }
+            });
             done();
           });
       });
