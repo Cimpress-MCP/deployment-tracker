@@ -19,10 +19,13 @@ function healthcheck(req, res) {
   require("../../lib/healthcheck/index.js")()
     .then(function(results){
       // If any tests have failed, return with a 503
-      var failures = results.tests.filter(function(e) {
-        return e.test_result === "failed";
+      var failures = [];
+      Object.keys(results.tests).forEach(function (key) {
+        var value = results.tests[key];
+        if (value.result === "failed") {
+          failures.push(value);
+        }
       });
-
       res.status((failures.length > 0) ? 503 : 200).json(results);
     }).catch(function(results){
       res.status(503).json(results);
