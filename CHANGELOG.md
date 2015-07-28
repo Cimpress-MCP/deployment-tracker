@@ -1,3 +1,8 @@
+0.1.15 (July 28th, 2015)
+
+  - Fix database healthcheck to properly report failure if the database can't be
+  accessed. Previous behavior was a reported error, but a healthcheck test result of "passed".
+
 0.1.14 (July 27th, 2015)
 
   - Update healthcheck test format to be friendlier for json parsing. For example:
