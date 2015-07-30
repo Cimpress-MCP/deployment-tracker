@@ -13,7 +13,9 @@ var swaggerConfig = {
 
 var config = require("./config.json");
 
-var logger = require("./lib/logger.js").getLogger({"module": __filename});
+var Logger = require("./lib/logger.js");
+Logger.setLogDir("/var/log/deployment-tracker/");
+var logger = Logger.getLogger({"module": __filename});
 logger.info("Deployment Tracker starting up.");
 
 var statsdClient = require("./lib/statsd.js").init(config.statsd || {});
