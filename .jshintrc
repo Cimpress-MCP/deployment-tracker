@@ -11,6 +11,7 @@
   "mocha": true,
   "globals": {
     "app": true,
-    "Promise": true
+    "Promise": true,
+    "Logger": true
   }
 }

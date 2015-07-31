@@ -13,15 +13,13 @@ var swaggerConfig = {
 
 var config = require("./config.json");
 
-var logger = require("./lib/logger.js").getLogger({"module": __filename});
+Logger = require("./lib/logger.js");
+Logger.setLogDir("/var/log/deployment-tracker/");
+var logger = Logger.getLogger({"module": __filename});
 logger.info("Deployment Tracker starting up.");
 
 var statsdClient = require("./lib/statsd.js").init(config.statsd || {});
 var redisClient = require("./lib/redis.js").init(config.redis || {});
-redisClient.on("error", function (err) {
-  logger.error(err, "Error in redis_client");
-  statsdClient.increment("deployment-tracker.redis.error");
-});
 
 var db = require("./data/models/index.js");
 db.sequelize.options.logging = function(message) {
