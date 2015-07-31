@@ -1,6 +1,6 @@
 {
   "name": "deployment-tracker",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "dependencies": {
     "bunyan": {
       "version": "1.4.0",
