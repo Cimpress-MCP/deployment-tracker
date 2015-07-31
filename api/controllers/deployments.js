@@ -1,6 +1,6 @@
 "use strict";
 
-var logger = require("../../lib/logger.js").getLogger({"module": __filename});
+var logger = Logger.getLogger({"module": __filename});
 
 var util = require("util");
 var statsdClient = app.get("statsd");
