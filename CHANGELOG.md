@@ -1,3 +1,9 @@
+0.1.16 (July 31st, 2015)
+
+  - Update all logger references to log to the `/var/log/deployment-tracker` directory.
+  This now requires that the directory be created before running the application and may
+  require running node as root.
+
 0.1.15 (July 28th, 2015)
 
   - Fix database healthcheck to properly report failure if the database can't be
