@@ -46,6 +46,7 @@ function postDeployment(req, res) {
         res.status(500).json({ "error": err.message});
       }
       statsdClient.increment("deployments.started");
+      statsdClient.increment("deployments.engine." + deployment.engine);
       var prefix = "deployments.environments." + statsdClient.escape(deployment.environment) + ".packages." + statsdClient.escape(deployment.package) + ".";
       statsdClient.increment(prefix + ".started");
       res.location("/v1/deployments/" + deployment.id);

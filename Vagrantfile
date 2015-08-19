@@ -7,6 +7,7 @@ ln -sf /usr/bin/nodejs /usr/bin/node
 # We want to use the local deployment-tracker, not the npm version, so that we can iterate on changes
 mkdir -p /usr/local/lib/node_modules
 ln -sf /vagrant /usr/local/lib/node_modules/deployment-tracker
+npm install
 
 # Create init script for deployment-tracker
 cat <<EOF >/etc/init/deployment-tracker.conf
@@ -36,4 +37,5 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
   config.vm.provision :shell, inline: @script
   config.vm.network "forwarded_port", guest: 6379, host: 6379
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
 end
