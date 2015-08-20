@@ -1,3 +1,7 @@
+0.1.17 (August 20th, 2015)
+
+  - Now reporting deployment.engine as a metric to statsd for POST to deployments
+
 0.1.16 (July 31st, 2015)
 
   - Update all logger references to log to the `/var/log/deployment-tracker` directory.
