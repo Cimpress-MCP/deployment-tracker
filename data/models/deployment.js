@@ -11,9 +11,9 @@ module.exports = function (sequelize, DataTypes) {
         user: DataTypes.STRING,
         environment: DataTypes.STRING,
         package: DataTypes.STRING,
-        package_url: DataTypes.STRING,
+        package_url: DataTypes.STRING(2048),
         version: DataTypes.STRING,
-        arguments: DataTypes.STRING,
+        arguments: DataTypes.STRING(2048),
         result: DataTypes.STRING,
         elapsed_seconds: DataTypes.INTEGER
     }, {
