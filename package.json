@@ -12,7 +12,7 @@
     "type": "git",
     "url": "https://github.com/Cimpress-MCP/deployment-tracker.git"
   },
-  "license": "Apache 2",
+  "license": "Apache-2.0",
   "main": "app.js",
   "dependencies": {
     "bunyan": "^1.4.0",
