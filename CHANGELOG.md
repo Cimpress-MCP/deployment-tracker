@@ -1,3 +1,7 @@
+0.1.18 (August 21th, 2015)
+
+  - Increased field length for Deployment model fields package_url and arguments to 2048
+
 0.1.17 (August 20th, 2015)
 
   - Now reporting deployment.engine as a metric to statsd for POST to deployments
