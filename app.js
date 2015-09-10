@@ -7,6 +7,9 @@ var SwaggerExpress = require("swagger-express-mw");
 app = require("express")();
 module.exports = app;  // for testing
 
+// Enable CORS for the swagger route only, so that this can be used with Swagger UI.
+app.use("/swagger", require("./api/middleware/enableCors.js"));
+
 var swaggerConfig = {
   appRoot: __dirname // required config
 };
