@@ -53,22 +53,22 @@ function putServer(req, res) {
 
 function getAllServers (req, res, next) {
   // Sequelize #findAll has no way to SELECT Distinct (without also counting or
-  // aggregating in some other way). https://github.com/sequelize/sequelize/issues/2996
+  // aggregating in some other way).
+  // However, #aggregate supports it https://github.com/sequelize/sequelize/issues/2996
   /* jshint multistr: true */
-  db.sequelize.query("SELECT DISTINCT(`hostname`) \
-                      FROM Servers \
-                      ORDER BY `hostname` DESC \
-                      LIMIT :limit OFFSET :offset", {
-                        replacements: {
-                          limit: req.swagger.params.limit.value,
-                          offset: req.swagger.params.offset.value
-                        }
-                      })
+  db.Server.aggregate(
+    "hostname",
+    "DISTINCT",
+    {
+      offset: req.swagger.params.offset.value,
+      limit: req.swagger.params.limit.value,
+      order: [ ["hostname", "DESC"] ],
+      plain: false
+    })
     .then(function (servers) {
-
       if (servers !== null) {
-        servers = servers[0].map(function (e) {
-          return e.hostname;
+        servers = servers.map(function (e) {
+          return e.DISTINCT;
         });
       }
 
