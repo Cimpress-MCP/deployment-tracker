@@ -17,7 +17,11 @@ var swaggerConfig = {
 var config = require("./config.json");
 
 Logger = require("./lib/logger.js");
-Logger.setLogDir("/var/log/deployment-tracker/");
+
+if (process.env.DEPLOYMENT_TRACKER_LOG_PATH) {
+  Logger.setLogDir(process.env.DEPLOYMENT_TRACKER_LOG_PATH);
+}
+
 var logger = Logger.getLogger({"module": __filename});
 logger.info("Deployment Tracker starting up.");
 

@@ -10,7 +10,6 @@ var sequelize = new Sequelize(config.database, config.username, config.password,
 var db        = {};
 
 console.log("Loading database models");
-
 fs
   .readdirSync(__dirname)
   .filter(function(file) {

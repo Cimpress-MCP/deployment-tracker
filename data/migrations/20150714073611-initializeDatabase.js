@@ -38,8 +38,8 @@ module.exports = {
       deployment_id: {
         type: DataTypes.UUID,
         primaryKey: true,
-        references: "Deployments",
-        referencesKey: "deployment_id",
+        model: "Deployments",
+        key: "deployment_id",
         onDelete: "cascade",
         onUpdate: "cascade"
       },
