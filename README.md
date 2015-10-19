@@ -12,6 +12,8 @@ Outputs include:
     npm install deployment-tracker
     node deployment-tracker
 
+Note: Not compatible with Node.js versions 4.x
+
 ## Usage
 
 ```
