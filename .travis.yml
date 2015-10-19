@@ -1,9 +1,8 @@
-sudo: false
 language: node_js
 install:
 - npm install
 - npm install -g grunt-cli
-before_script: mkdir -p /var/log/deployment-tracker
+before_script: sudo mkdir -p /var/log/deployment-tracker
 script: DEPLOYMENT_TRACKER_MOCK_REDIS=true grunt
 deploy:
   provider: npm
