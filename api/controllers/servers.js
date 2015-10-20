@@ -90,7 +90,7 @@ function getServerByHostname (req, res, next) {
     where: { hostname: hostname },
     limit: req.swagger.params.limit.value,
     offset: req.swagger.params.offset.value,
-    order: "`createdAt` DESC"
+    order: [ ["createdAt", "DESC"] ]
   })
     .then(function (servers) {
         if (servers.length === 0) {
